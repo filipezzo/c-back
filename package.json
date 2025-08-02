@@ -1,0 +1,33 @@
+{
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "prisma": "^6.13.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.9.2"
+  },
+  "name": "c-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "esbuild": "^0.25.8",
+    "get-tsconfig": "^4.10.1",
+    "resolve-pkg-maps": "^1.0.0",
+    "undici-types": "^7.8.0"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filipezzo/c-back.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/filipezzo/c-back/issues"
+  },
+  "homepage": "https://github.com/filipezzo/c-back#readme"
+}
