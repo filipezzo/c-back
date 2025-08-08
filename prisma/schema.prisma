@@ -1,0 +1,105 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
+  created_at DateTime @default(now())
+
+  progress     UserProgress[]
+  achievements UserAchievement[]
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  order       Int
+  created_at  DateTime @default(now())
+
+  lessons Lesson[]
+
+  @@index([created_at])
+}
+
+model Lesson {
+  id        String  @id @default(uuid())
+  module_id String
+  module    Module  @relation(fields: [module_id], references: [id], onDelete: Cascade)
+  title     String
+  content   String
+  order     Int
+
+  quizzes  Quizzes[]
+  progress UserProgress[]
+
+  @@index([module_id])
+  @@unique([module_id, order])
+}
+
+model Quizzes {
+  id        String  @id @default(uuid())
+  lesson_id String
+  lesson    Lesson  @relation(fields: [lesson_id], references: [id], onDelete: Cascade)
+  title     String
+
+  questions Questions[]
+
+  @@index([lesson_id])
+}
+
+model Questions {
+  id             String   @id @default(uuid())
+  quiz_id        String
+  quiz           Quizzes  @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+  question       String
+  correct_answer String
+  options        String[]
+
+  @@index([quiz_id])
+}
+
+model Achievement {
+  id          String            @id @default(uuid())
+  title       String
+  description String?
+  icon        String
+
+  users UserAchievement[]
+}
+
+model UserAchievement {
+  id              String       @id @default(uuid())
+  user_id         String
+  achievement_id  String
+  user            User         @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  achievement     Achievement  @relation(fields: [achievement_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([achievement_id])
+  @@unique([user_id, achievement_id])
+}
+
+model UserProgress {
+  id           String   @id @default(uuid())
+  user_id      String
+  lesson_id    String
+  user         User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  lesson       Lesson   @relation(fields: [lesson_id], references: [id], onDelete: Cascade)
+  completed_at DateTime @default(now())
+
+  @@index([user_id])
+  @@index([lesson_id])
+  @@index([completed_at])
+  @@unique([user_id, lesson_id]) 
+}
