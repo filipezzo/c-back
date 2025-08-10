@@ -1,34 +1,45 @@
 {
-  "devDependencies": {
-    "@types/node": "^24.1.0",
-    "prisma": "^6.13.0",
-    "tsx": "^4.20.3",
-    "typescript": "^5.9.2"
-  },
-  "name": "c-back",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "dependencies": {
-    "@prisma/client": "6.13.0",
-    "esbuild": "^0.25.8",
-    "get-tsconfig": "^4.10.1",
-    "resolve-pkg-maps": "^1.0.0",
-    "undici-types": "^7.8.0"
-  },
-  "scripts": {
-    "dev": "tsx watch src/index.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/filipezzo/c-back.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/filipezzo/c-back/issues"
-  },
-  "homepage": "https://github.com/filipezzo/c-back#readme"
+    "devDependencies": {
+        "@eslint/js": "^9.33.0",
+        "@types/node": "^24.1.0",
+        "eslint": "^9.33.0",
+        "globals": "^16.3.0",
+        "prisma": "^6.13.0",
+        "tsx": "^4.20.3",
+        "typescript": "^5.9.2",
+        "typescript-eslint": "^8.39.0"
+    },
+    "name": "c-back",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "dependencies": {
+        "@fastify/cors": "^11.1.0",
+        "@fastify/jwt": "^9.1.0",
+        "@fastify/swagger": "^9.5.1",
+        "@fastify/swagger-ui": "^5.2.3",
+        "@prisma/client": "6.13.0",
+        "esbuild": "^0.25.8",
+        "fastify": "^5.4.0",
+        "fastify-type-provider-zod": "^5.0.3",
+        "get-tsconfig": "^4.10.1",
+        "resolve-pkg-maps": "^1.0.0",
+        "undici-types": "^7.8.0",
+        "zod": "^4.0.17"
+    },
+    "scripts": {
+        "dev": "tsx watch src/index.ts"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/filipezzo/c-back.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "bugs": {
+        "url": "https://github.com/filipezzo/c-back/issues"
+    },
+    "homepage": "https://github.com/filipezzo/c-back#readme"
 }
