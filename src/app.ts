@@ -6,7 +6,7 @@ import {
   validatorCompiler,
   type ZodTypeProvider,
 } from "fastify-type-provider-zod";
-import { userRoutes } from "./models/user/user-route.js";
+import { userRoutes } from "./models/user/user-routes.js";
 
 import fastifySwagger from "@fastify/swagger";
 import scalarApiReference from "@scalar/fastify-api-reference";

@@ -11,7 +11,7 @@ const userCore = z.object({
   }),
 });
 
-const createUserSchema = userCore.extend({
+export const createUserSchema = userCore.extend({
   password: z.string({
     error: "A senha é obrigatória.",
   }),
