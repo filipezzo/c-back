@@ -40,28 +40,28 @@ model Lesson {
   content   String
   order     Int
 
-  quizzes  Quizzes[]
+  quizzes  Quiz[]
   progress UserProgress[]
 
   @@index([module_id])
   @@unique([module_id, order])
 }
 
-model Quizzes {
+model Quiz {
   id        String  @id @default(uuid())
   lesson_id String
   lesson    Lesson  @relation(fields: [lesson_id], references: [id], onDelete: Cascade)
   title     String
 
-  questions Questions[]
+  questions Question[]
 
   @@index([lesson_id])
 }
 
-model Questions {
+model Question {
   id             String   @id @default(uuid())
   quiz_id        String
-  quiz           Quizzes  @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+  quiz           Quiz  @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
   question       String
   correct_answer String
   options        String[]
@@ -101,5 +101,5 @@ model UserProgress {
   @@index([user_id])
   @@index([lesson_id])
   @@index([completed_at])
-  @@unique([user_id, lesson_id]) 
+  @@unique([user_id, lesson_id])
 }
