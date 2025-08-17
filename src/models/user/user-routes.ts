@@ -1,10 +1,23 @@
 import type { FastifyInstance } from "fastify";
-import { handlerUserRegister } from "./user-controller.js";
+import { handlerListUsers, handlerUserRegister } from "./user-controller.js";
 
 import { z } from "zod";
-import { createUserSchema } from "./user-schema.js";
+import { createUserSchema, userResponseSchema } from "./user-schema.js";
 
 export async function userRoutes(fastity: FastifyInstance) {
+  fastity.get(
+    "/",
+    {
+      schema: {
+        tags: ["users"],
+        summary: "Lista os usuários",
+        response: {
+          200: z.array(userResponseSchema),
+        },
+      },
+    },
+    handlerListUsers
+  );
   fastity.post(
     "/",
     {
@@ -13,12 +26,7 @@ export async function userRoutes(fastity: FastifyInstance) {
         summary: "Crie um usuário",
         body: createUserSchema,
         response: {
-          201: z.object({
-            id: z.uuid(),
-            name: z.string(),
-            email: z.email(),
-            created_at: z.iso.datetime(),
-          }),
+          201: userResponseSchema,
         },
       },
     },

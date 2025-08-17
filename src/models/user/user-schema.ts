@@ -1,5 +1,19 @@
 import { z } from "zod";
 
+export const userResponse = {
+  id: true,
+  name: true,
+  email: true,
+  created_at: true,
+} as const;
+
+export const userResponseSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  email: z.email(),
+  created_at: z.date(),
+});
+
 const userCore = z.object({
   name: z
     .string({
