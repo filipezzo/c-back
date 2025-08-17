@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { prisma } from "../../utils/prisma.js";
+import { prisma } from "../../db/prisma.js";
 import type { CreateUserInput } from "./user-schema.js";
 
 export async function createUser({ email, name, password }: CreateUserInput) {
@@ -14,5 +14,8 @@ export async function createUser({ email, name, password }: CreateUserInput) {
     } as const,
   });
 
-  return user;
+  return {
+    ...user,
+    created_at: user.created_at.toISOString(),
+  };
 }
