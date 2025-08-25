@@ -44,3 +44,29 @@ test("listing all users", async () => {
     expect(user).not.toHaveProperty("password");
   });
 });
+
+test("patching a user", async () => {
+  const name = faker.person.firstName();
+  const email = faker.internet.email();
+
+  const createRes = await request(testServer)
+    .post("/api/users")
+    .set("Content-Type", "application/json")
+    .send({
+      name,
+      email,
+      password: "123456x",
+    })
+    .expect(201);
+
+  const id = createRes.body.id;
+  const newName = faker.person.firstName();
+  const res = await request(testServer)
+    .patch(`/api/users/${id}`)
+    .set("Content-Type", "application/json")
+    .send({ name: newName })
+    .expect(200);
+
+  expect(res.body).toHaveProperty("id");
+  expect(res.body.name).toEqual(newName);
+});

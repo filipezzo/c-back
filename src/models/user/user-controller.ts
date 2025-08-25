@@ -1,6 +1,10 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type { CreateUserInput } from "./user-schema.js";
-import { createUser, getUsers } from "./user-service.js";
+import type {
+  CreateUserInput,
+  PatchUserInput,
+  UserParams,
+} from "./user-schema.js";
+import { createUser, getUsers, patchUsers } from "./user-service.js";
 
 export async function handlerUserRegister(
   request: FastifyRequest<{
@@ -16,4 +20,16 @@ export async function handlerUserRegister(
 export async function handlerListUsers(_: FastifyRequest, reply: FastifyReply) {
   const { users } = await getUsers();
   return reply.code(200).send(users);
+}
+
+export async function handlePatchUser(
+  request: FastifyRequest<{ Body: PatchUserInput; Params: UserParams }>,
+  reply: FastifyReply
+) {
+  const { user } = await patchUsers({
+    id: request.params.id,
+    data: request.body,
+  });
+
+  return reply.status(200).send(user);
 }

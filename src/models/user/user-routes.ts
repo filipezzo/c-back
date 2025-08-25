@@ -1,8 +1,17 @@
 import type { FastifyInstance } from "fastify";
-import { handlerListUsers, handlerUserRegister } from "./user-controller.js";
+import {
+  handlePatchUser,
+  handlerListUsers,
+  handlerUserRegister,
+} from "./user-controller.js";
 
 import { z } from "zod";
-import { createUserSchema, userResponseSchema } from "./user-schema.js";
+import {
+  createUserSchema,
+  updateUserSchema,
+  userParamsSchema,
+  userResponseSchema,
+} from "./user-schema.js";
 
 export async function userRoutes(fastity: FastifyInstance) {
   fastity.get(
@@ -31,5 +40,21 @@ export async function userRoutes(fastity: FastifyInstance) {
       },
     },
     handlerUserRegister
+  );
+
+  fastity.patch(
+    "/:id",
+    {
+      schema: {
+        tags: ["users"],
+        summary: "Atualize um usuário",
+        params: userParamsSchema,
+        body: updateUserSchema,
+        response: {
+          200: userResponseSchema,
+        },
+      },
+    },
+    handlePatchUser
   );
 }

@@ -1,7 +1,12 @@
-import bcrypt from "bcrypt";
+import type { Prisma } from "@prisma/client";
+import bcrypt, { hash } from "bcrypt";
 import { prisma } from "../../db/prisma.js";
 import { AppError } from "../../plugins/error-handler.js";
-import { userResponse, type CreateUserInput } from "./user-schema.js";
+import {
+  userResponse,
+  type CreateUserInput,
+  type PatchUserInput,
+} from "./user-schema.js";
 
 export async function createUser({ email, name, password }: CreateUserInput) {
   const exists = await prisma.user.findUnique({ where: { email } });
@@ -28,4 +33,40 @@ export async function getUsers() {
   });
 
   return { users };
+}
+
+export async function patchUsers({
+  id,
+  data,
+}: {
+  id: string;
+  data: PatchUserInput;
+}) {
+  const { name, email, password } = data;
+
+  if (email) {
+    const exists = await prisma.user.findUnique({ where: { email } });
+    if (exists && exists.id !== id) {
+      throw new AppError({
+        code: "CONFLIT",
+        status: 409,
+        message: "User already exits",
+        details: { email },
+      });
+    }
+  }
+
+  const payload: Prisma.UserUpdateInput = {
+    ...(name !== undefined && { name }),
+    ...(email !== undefined && { email }),
+    ...(password !== undefined && { password: await hash(password, 12) }),
+  };
+
+  const user = await prisma.user.update({
+    where: { id },
+    data: payload,
+    select: userResponse,
+  });
+
+  return { user };
 }
