@@ -10,9 +10,14 @@ import { userRoutes } from "./models/user/user-routes.js";
 
 import fastifySwagger from "@fastify/swagger";
 import scalarApiReference from "@scalar/fastify-api-reference";
+import { errorHandlerPlugin } from "./plugins/error-handler.js";
 
 export function app() {
   const app = Fastify().withTypeProvider<ZodTypeProvider>();
+
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
+  app.register(errorHandlerPlugin);
 
   if (process.env.NODE_ENV === "development") {
     app.register(fastifySwagger, {
@@ -29,11 +34,10 @@ export function app() {
       routePrefix: "/docs",
     });
   }
-  app.setValidatorCompiler(validatorCompiler);
-  app.setSerializerCompiler(serializerCompiler);
+
   app.register(fastifyCors, { origin: true });
 
-  app.register(userRoutes, { prefix: "api/users" });
+  app.register(userRoutes, { prefix: "/api/users" });
 
   return app;
 }
