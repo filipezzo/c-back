@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import {
+  handleDeleteUser,
   handleGetUser,
   handlePatchUser,
   handlerListUsers,
@@ -70,5 +71,20 @@ export async function userRoutes(fastify: FastifyInstance) {
       },
     },
     handlePatchUser
+  );
+
+  fastify.delete(
+    "/:id",
+    {
+      schema: {
+        tags: ["users"],
+        summary: "Remove um usuário",
+        params: userParamsSchema,
+        response: {
+          204: z.null(),
+        },
+      },
+    },
+    handleDeleteUser
   );
 }

@@ -96,3 +96,26 @@ test("getting a user", async () => {
   expect(resp2.statusCode).toEqual(404);
   expect(resp2.body).toHaveProperty("error");
 });
+
+test("deleting a user", async () => {
+  const name = faker.person.firstName();
+  const email = faker.internet.email();
+
+  const createRes = await request(testServer)
+    .post("/api/users")
+    .set("Content-Type", "application/json")
+    .send({
+      name,
+      email,
+      password: "123456x",
+    })
+    .expect(201);
+  const id = createRes.body.id;
+
+  const resp1 = await request(testServer).delete(`/api/users/${id}`);
+  expect(resp1.statusCode).toEqual(204);
+  expect(resp1.body).toStrictEqual({});
+
+  const resp2 = await request(testServer).delete(`/api/users/${id}`);
+  expect(resp2.statusCode).toEqual(404);
+});

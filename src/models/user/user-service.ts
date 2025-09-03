@@ -95,3 +95,27 @@ export async function patchUsers({
 
   return { user };
 }
+
+export async function deleteUser(id: string) {
+  try {
+    await prisma.user.delete({ where: { id } });
+  } catch (e: any) {
+    if (e.code === "P2025") {
+      throw new AppError({
+        code: "NOT_FOUND",
+        status: 404,
+        message: "User not found",
+        details: { id },
+      });
+    }
+    if (e.code === "P2003") {
+      throw new AppError({
+        code: "CONFLICT",
+        status: 409,
+        message: "User has related records",
+        details: e.meta ?? null,
+      });
+    }
+    throw e;
+  }
+}

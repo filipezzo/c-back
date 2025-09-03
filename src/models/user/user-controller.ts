@@ -6,6 +6,7 @@ import type {
 } from "./user-schema.js";
 import {
   createUser,
+  deleteUser,
   getUserById,
   getUsers,
   patchUsers,
@@ -45,4 +46,12 @@ export async function handlePatchUser(
   });
 
   return reply.status(200).send(user);
+}
+
+export async function handleDeleteUser(
+  request: FastifyRequest<{ Params: UserParams }>,
+  reply: FastifyReply
+) {
+  await deleteUser(request.params.id);
+  return reply.status(204).send();
 }
