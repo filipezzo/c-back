@@ -32,7 +32,32 @@ export async function getUsers() {
     select: userResponse,
   });
 
+  if (!users) {
+    throw new AppError({
+      code: "ERROR",
+      status: 400,
+      message: "Error while fetching users",
+    });
+  }
+
   return { users };
+}
+
+export async function getUserById(id: string) {
+  const user = await prisma.user.findUnique({
+    where: { id },
+    select: userResponse,
+  });
+
+  if (!user) {
+    throw new AppError({
+      code: "NOT_FOUND",
+      status: 404,
+      message: "User not found.",
+      details: { id },
+    });
+  }
+  return { user };
 }
 
 export async function patchUsers({

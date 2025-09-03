@@ -4,7 +4,12 @@ import type {
   PatchUserInput,
   UserParams,
 } from "./user-schema.js";
-import { createUser, getUsers, patchUsers } from "./user-service.js";
+import {
+  createUser,
+  getUserById,
+  getUsers,
+  patchUsers,
+} from "./user-service.js";
 
 export async function handlerUserRegister(
   request: FastifyRequest<{
@@ -20,6 +25,14 @@ export async function handlerUserRegister(
 export async function handlerListUsers(_: FastifyRequest, reply: FastifyReply) {
   const { users } = await getUsers();
   return reply.code(200).send(users);
+}
+
+export async function handleGetUser(
+  request: FastifyRequest<{ Params: UserParams }>,
+  reply: FastifyReply
+) {
+  const { user } = await getUserById(request.params.id);
+  return reply.code(200).send(user);
 }
 
 export async function handlePatchUser(

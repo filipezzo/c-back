@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import {
+  handleGetUser,
   handlePatchUser,
   handlerListUsers,
   handlerUserRegister,
@@ -13,8 +14,8 @@ import {
   userResponseSchema,
 } from "./user-schema.js";
 
-export async function userRoutes(fastity: FastifyInstance) {
-  fastity.get(
+export async function userRoutes(fastify: FastifyInstance) {
+  fastify.get(
     "/",
     {
       schema: {
@@ -27,7 +28,20 @@ export async function userRoutes(fastity: FastifyInstance) {
     },
     handlerListUsers
   );
-  fastity.post(
+
+  fastify.get(
+    "/:id",
+    {
+      schema: {
+        tags: ["users"],
+        summary: "Busca informações de um usuário",
+        params: userParamsSchema,
+        response: { 200: userResponseSchema },
+      },
+    },
+    handleGetUser
+  );
+  fastify.post(
     "/",
     {
       schema: {
@@ -42,7 +56,7 @@ export async function userRoutes(fastity: FastifyInstance) {
     handlerUserRegister
   );
 
-  fastity.patch(
+  fastify.patch(
     "/:id",
     {
       schema: {

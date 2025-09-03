@@ -70,3 +70,29 @@ test("patching a user", async () => {
   expect(res.body).toHaveProperty("id");
   expect(res.body.name).toEqual(newName);
 });
+
+test("getting a user", async () => {
+  const name = faker.person.firstName();
+  const email = faker.internet.email();
+
+  const createRes = await request(testServer)
+    .post("/api/users")
+    .set("Content-Type", "application/json")
+    .send({
+      name,
+      email,
+      password: "123456x",
+    })
+    .expect(201);
+  const id = createRes.body.id;
+
+  const res = await request(testServer).get(`/api/users/${id}`);
+  expect(res.body).toHaveProperty("id");
+  expect(id).toEqual(res.body.id);
+
+  const randomUUID = crypto.randomUUID();
+
+  const resp2 = await request(testServer).get(`/api/users/${randomUUID}`);
+  expect(resp2.statusCode).toEqual(404);
+  expect(resp2.body).toHaveProperty("error");
+});
