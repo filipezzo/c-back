@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { userResponseSchema } from "../user/user-schema.js";
 
 export const loginSchema = z.object({
   email: z.email("Email inválido."),
@@ -14,4 +13,9 @@ export const changePasswordSchema = z.object({
 });
 
 export type ChangePasswordInput = z.output<typeof changePasswordSchema>;
-export const meResponseSchema = userResponseSchema;
+
+export const meResponseSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  email: z.email(),
+});

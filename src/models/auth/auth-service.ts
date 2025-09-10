@@ -25,7 +25,6 @@ export async function authLogin(email: string, password: string) {
     id: u.id,
     name: u.name,
     email: u.email,
-    created_at: u.created_at,
   };
 
   return { user, tokenVersion: u.tokenVersion };
@@ -34,7 +33,7 @@ export async function authLogin(email: string, password: string) {
 export async function getMe(userId: string) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { id: true, name: true, email: true, created_at: true },
+    select: { id: true, name: true, email: true },
   });
 
   if (!user) {
