@@ -14,8 +14,9 @@ import fastifySwagger from "@fastify/swagger";
 import scalarApiReference from "@scalar/fastify-api-reference";
 import { CORS_ORIGINS, isProd, JWT_SECRET, NODE_ENV } from "./env.js";
 import { authRoutes } from "./models/auth/auth-routes.js";
-import { lessonRoutes } from "./models/lesson/lesson-route.js";
+import { lessonRoutes } from "./models/lesson/lesson-routes.js";
 import { moduleRoutes } from "./models/module/module-routes.js";
+import { progressRoutes } from "./models/progress/progress-routes.js";
 import { errorHandlerPlugin } from "./plugins/error-handler.js";
 
 export function app() {
@@ -54,5 +55,6 @@ export function app() {
   app.register(authRoutes, { prefix: "/api" });
   app.register(moduleRoutes, { prefix: "/api/modules" });
   app.register(lessonRoutes, { prefix: "/api/lessons" });
+  app.register(progressRoutes, { prefix: "/api" });
   return app;
 }
