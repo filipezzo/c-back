@@ -1,6 +1,8 @@
+// src/models/lesson/lesson-service.ts
 import type { z } from "zod";
 import { prisma } from "../../db/prisma.js";
 import { AppError } from "../../plugins/error-handler.js";
+import { maybeAwardAfterLessonCompletion } from "../achievement/achievement-service.js";
 import { quizSubmitSchema } from "./lesson-schema.js";
 
 export async function getLesson(id: string) {
@@ -28,6 +30,7 @@ export async function getQuizByLesson(lessonId: string) {
       },
     },
   });
+
   if (!quiz) return { quiz: null as any };
 
   return {
@@ -49,6 +52,7 @@ export async function submitQuiz(
     where: { lesson_id: lessonId },
     include: { questions: true },
   });
+
   if (!quiz) {
     throw new AppError({
       code: "NOT_FOUND",
@@ -58,6 +62,7 @@ export async function submitQuiz(
   }
 
   const map = new Map(data.answers.map((a) => [a.questionId, a.answer]));
+
   let correct = 0;
   const correctIds: string[] = [];
   const wrong: { questionId: string; expected: string; got: string }[] = [];
@@ -81,6 +86,8 @@ export async function submitQuiz(
       create: { user_id: userId, lesson_id: lessonId },
       update: {},
     });
+
+    await maybeAwardAfterLessonCompletion(userId, lessonId);
   }
 
   return { result: { total, correct, correctIds, wrong, passed } };
@@ -92,4 +99,6 @@ export async function completeLesson(userId: string, lessonId: string) {
     create: { user_id: userId, lesson_id: lessonId },
     update: {},
   });
+
+  await maybeAwardAfterLessonCompletion(userId, lessonId);
 }
