@@ -1,4 +1,6 @@
+import type z from "zod";
 import { prisma } from "../../db/prisma.js";
+import type { moduleCreateSchema } from "./module-schema.js";
 
 const toModuleDTO = (m: any) => ({
   id: m.id,
@@ -34,4 +36,16 @@ export async function getModule(id: string) {
       lessons: row.lessons,
     },
   };
+}
+
+export async function createModule(data: z.infer<typeof moduleCreateSchema>) {
+  const row = await prisma.module.create({
+    data: {
+      title: data.title,
+      description: data.description,
+      order: data.order,
+    },
+  });
+
+  return { module: toModuleDTO(row) };
 }

@@ -1,6 +1,8 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
+import type z from "zod";
 import { AppError } from "../../plugins/error-handler.js";
-import { getModule, listModules } from "./module-service.js";
+import type { moduleCreateSchema } from "./module-schema.js";
+import { createModule, getModule, listModules } from "./module-service.js";
 
 export async function handleListModules(
   _: FastifyRequest,
@@ -23,4 +25,15 @@ export async function handleGetModule(
     });
   }
   return reply.code(200).send(module);
+}
+
+export async function handleCreateModule(
+  req: FastifyRequest,
+  reply: FastifyReply
+) {
+  const body = req.body as z.infer<typeof moduleCreateSchema>;
+
+  const { module } = await createModule(body);
+
+  return reply.code(201).send(module);
 }

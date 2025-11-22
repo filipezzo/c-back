@@ -17,3 +17,9 @@ export const moduleResponseSchema = z.object({
 export const moduleWithLessonsSchema = moduleResponseSchema.extend({
   lessons: z.array(lessonHeadSchema),
 });
+
+export const moduleCreateSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  order: z.number().int(),
+});
