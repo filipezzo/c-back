@@ -1,9 +1,10 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import type z from "zod";
+import type { default as z } from "zod";
 import { AppError } from "../../plugins/error-handler.js";
-import type { quizSubmitSchema } from "./lesson-schema.js";
+import type { lessonCreateSchema, quizSubmitSchema } from "./lesson-schema.js";
 import {
   completeLesson,
+  createLesson,
   getLesson,
   getQuizByLesson,
   submitQuiz,
@@ -56,4 +57,13 @@ export async function handleCompleteLesson(
   const userId = (req.user as any).sub;
   await completeLesson(userId, id);
   return reply.code(204).send();
+}
+
+export async function handleCreateLesson(
+  req: FastifyRequest,
+  reply: FastifyReply
+) {
+  const body = req.body as z.infer<typeof lessonCreateSchema>;
+  const { lesson } = await createLesson(body);
+  return reply.code(201).send(lesson);
 }

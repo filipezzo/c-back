@@ -1,9 +1,8 @@
-// src/models/lesson/lesson-service.ts
 import type { z } from "zod";
 import { prisma } from "../../db/prisma.js";
 import { AppError } from "../../plugins/error-handler.js";
 import { maybeAwardAfterLessonCompletion } from "../achievement/achievement-service.js";
-import { quizSubmitSchema } from "./lesson-schema.js";
+import { lessonCreateSchema, quizSubmitSchema } from "./lesson-schema.js";
 
 export async function getLesson(id: string) {
   const row = await prisma.lesson.findUnique({ where: { id } });
@@ -101,4 +100,25 @@ export async function completeLesson(userId: string, lessonId: string) {
   });
 
   await maybeAwardAfterLessonCompletion(userId, lessonId);
+}
+
+export async function createLesson(data: z.infer<typeof lessonCreateSchema>) {
+  const row = await prisma.lesson.create({
+    data: {
+      module_id: data.module_id,
+      title: data.title,
+      content: data.content,
+      order: data.order,
+    },
+  });
+
+  return {
+    lesson: {
+      id: row.id,
+      module_id: row.module_id,
+      title: row.title,
+      content: row.content,
+      order: row.order,
+    },
+  };
 }

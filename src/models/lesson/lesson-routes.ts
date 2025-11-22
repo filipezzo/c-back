@@ -3,11 +3,13 @@ import { z } from "zod";
 import { authGuard } from "../auth/auth-guard.js";
 import {
   handleCompleteLesson,
+  handleCreateLesson,
   handleGetLesson,
   handleGetQuiz,
   handleSubmitQuiz,
 } from "./lesson-controller.js";
 import {
+  lessonCreateSchema,
   lessonResponseSchema,
   quizResponseSchema,
   quizResultSchema,
@@ -28,6 +30,18 @@ export async function lessonRoutes(app: FastifyInstance) {
     handleGetLesson
   );
 
+  app.post(
+    "/",
+    {
+      schema: {
+        tags: ["lessons"],
+        summary: "Criar lição",
+        body: lessonCreateSchema,
+        response: { 201: lessonResponseSchema },
+      },
+    },
+    handleCreateLesson
+  );
   app.get(
     "/:id/quiz",
     {

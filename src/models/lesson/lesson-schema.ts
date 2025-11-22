@@ -43,3 +43,10 @@ export const quizResultSchema = z.object({
   ),
   passed: z.boolean(),
 });
+
+export const lessonCreateSchema = z.object({
+  module_id: z.uuid(),
+  title: z.string(),
+  content: z.string(),
+  order: z.number().int(),
+});
